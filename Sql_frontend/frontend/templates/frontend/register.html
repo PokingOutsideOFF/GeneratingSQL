@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+     <script src="{% static 'js/register.js' %}"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                console.log(sessionStorage.getItem("isLoggedIn"))
+                
+                if (sessionStorage.getItem("isLoggedIn") === "true") {
+                    // Redirect to the dashboard or home page
+                    location.href = "{% url 'home' %}"; // Adjust the path accordingly
+                }
+            } else {
+                // The page was loaded normally
+                console.log("Page loaded normally");
+                // Your logic here
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form method="POST" action="{% url 'register' %}" class="needs-validation" >
+            {% csrf_token %}
+            <div class="left-panel">
+                <p class="title">Sign Up</p>
+                {% comment %} {% if error %}
+                <div class="error-message" style="color: red;">{{ error }}</div>
+            {% endif %} {% endcomment %}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div id="error" style="color: red; display: none;"></div>
+                <div class="label">EMAIL</div>
+                <input class="input"type="email" id="email" name="email" placeholder="Email" required>
+                <div class="label">USERNAME</div>
+                <input class="input" type="text" id="username" name="username" placeholder="Username" required>
+                <div class="label">PASSWORD</div>
+                <input class="input" type="password" id="password" name="password" placeholder="Password" required>
+                <div class="label">CONFIRM PASSWORD</div>
+                <input class="input" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </div>
+        </form>
+        <div class="right-panel">
+            <p class="welcome-title">Welcome to GenSQL</p>
+            <p class="sign-up-text">Already have an account?</p>
+            <a href="{% url 'login' %}" class="sign-in-button">Sign In</a>
+        </div>
+    </div>
+</body>
+</html>

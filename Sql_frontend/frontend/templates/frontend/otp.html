@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verification</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static  'css/register.css' %}">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                console.log(sessionStorage.getItem("isLoggedIn"))
+                if (sessionStorage.getItem("isLoggedIn") === "true") {
+                    // Redirect to the dashboard or home page
+                    location.href = "{% url 'home' %}"; // Adjust the path accordingly
+                }
+            } else {
+                // The page was loaded normally
+                console.log("Page loaded normally");
+                // Your logic here
+            }
+        });
+    </script>   
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <p class="title">Email Verification</p>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            <form method="POST" action="{% url 'verify-otp' %}" class="needs-validation" >
+                {% csrf_token %}
+                <div class="label">OTP</div>
+                <input type="text" id="OTP" name="otp" placeholder="OTP" {% if block_input %}disabled{% endif %}>
+                <button type="submit" class="submit-btn" {% if block_input %}disabled{% endif %}>Verify</button>
+ 
+                {% if request.session.otp_attempts and request.session.otp_attempts >= 3 %}
+                    <p>Too many failed attempts? <a href="{% url 'resend-otp' %}">Resend OTP</a></p>
+                {% endif %}
+            </form>
+        </div>
+        <div class="right-panel">
+            <!-- <p class="sign-up-text">Already have an account?</p>
+            <a href="login.html" class="sign-in-button">Sign In</a> -->
+            <p class="welcome-title">Welcome to GenSQL</p>
+            <p class="sign-up-text">Generating SQL in seconds</p>
+        </div>
+    </div>
+
+    {% comment %} <script>
+        <script>
+            // This function prevents the user from going back using the browser's back button
+            (function (global) {
+                if (typeof(global) === "undefined") {
+                    throw new Error("window is undefined");
+                }
+        
+                var _hash = "!";  // Define the hash to prevent back navigation
+                var noBackPlease = function () {
+                    global.history.pushState(null, null, global.location.href);
+                    global.onpopstate = function () {
+                        global.history.pushState(null, null, global.location.href);
+                        alert("You cannot go back to the previous page.");  // Show an alert when back is pressed
+                    };
+                };
+        
+                // Initialize the no-back-navigation script on page load
+                global.onload = function () {
+                    noBackPlease();
+                };
+        
+                // Disable the backspace key as a back navigation button
+                document.body.onkeydown = function (e) {
+                    var element = e.target.nodeName.toLowerCase();
+                    if (e.which === 8 && (element !== 'input' && element !== 'textarea')) {
+                        e.preventDefault();
+                    }
+                    e.stopPropagation();
+                };
+            })(window);
+        </script>
+         {% endcomment %}
+    {% comment %} </script>    {% endcomment %}
+</body>
+</html>
+

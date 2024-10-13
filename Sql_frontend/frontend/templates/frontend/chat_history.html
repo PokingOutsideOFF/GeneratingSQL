@@ -1,0 +1,83 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat History - SQL Generator</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <script>
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+
+                console.log(sessionStorage.getItem("loggedOut"))
+                if (sessionStorage.getItem("loggedOut") === "True") {
+                    // Redirect to the dashboard or home page
+                    location.href = "{% url 'login' %}"; // Adjust the path accordingly
+                }
+            } else {
+                // The page was loaded normally
+                console.log("Page loaded normally");
+                {% comment %} if(sessionStorage.getItem("isLoggedIn") == null || sessionStorage.getItem("isLoggedIn") === "false" ){
+                    location.href = "{% url 'login' %}"
+                } {% endcomment %}
+            }
+        });
+</script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-left">
+                <img src="{% static 'images/database.png' %}" alt="GenSQL Logo" class="logo"> <!-- Replace with actual logo -->
+                <h2>GenSQL</h2>
+            </div>
+            <ul class="nav-right">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{%url 'chat_history' %}" class="active">Chat History</a></li>
+                <li><a href="{% url 'logout' %}" onclick = changeSessionStatus()>Logout</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="centered-heading">Chat History By SQL</h1>
+        <div class="filter-section">
+            <label for="filter">Filter by SQL Type:</label>
+            <select id="filter">
+                <option value="all">All</option>
+                <option value="mssql">MSSQL</option>
+                <option value="postgresql">PostgreSQL</option>
+                <option value="sqlite">SQLite</option>
+                <option value="oracle">Oracle SQL</option>
+            </select>
+        </div>
+
+        <!-- Chat History in Table Format -->
+        <div class="chat-history-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prompt</th>
+                        <th>Generated SQL Query</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Give me the highest paid employee</td>
+                        <td>SELECT * FROM employees WHERE salary = (SELECT MAX(salary) FROM employees);</td>
+                    </tr>
+                    <tr>
+                        <td>List all employees in marketing</td>
+                        <td>SELECT * FROM employees WHERE department = 'Marketing';</td>
+                    </tr>
+                    <!-- More rows can be added dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{%static 'js/chat_history.js' %}"></script>
+</body>
+</html>

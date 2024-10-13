@@ -1,0 +1,138 @@
+
+
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1E2761;
+    color: white;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    font-family: sans-serif;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#408EC6;
+    padding: 10px 20px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.centered-heading {
+    text-align: center;
+    margin: 20px 0;
+    font-family: Recoleta-Bold;
+    font-size: 40px;
+}
+.nav-left .logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.nav-left h2 {
+    margin: 0;
+    color: white;
+}
+
+.nav-right {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+
+.nav-right li {
+    margin-left: 20px;
+}
+
+.nav-right li a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-right li a:hover, .nav-right li a.active {
+    background-color: #FF5733;
+    border-radius: 5px;
+}
+
+/* Container Styling */
+.container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FFDA79;
+}
+
+/* Filter Section Styling */
+.filter-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.filter-section label {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.filter-section select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+
+/* Table Styling for Chat History */
+.chat-history-table {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+
+thead {
+    background-color:#408EC6;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+    color: #FFDA79;
+}
+
+tbody tr:nth-child(even) {
+    background-color:#555 ;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #555;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #777;
+}
+
+tbody td p {
+    margin: 0;
+}

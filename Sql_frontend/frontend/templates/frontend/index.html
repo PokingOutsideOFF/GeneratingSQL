@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/logins.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+
+        window.addEventListener("pageshow", function (event) {
+            const username = "{{ request.session.username|default:'User' }}";
+            if (event.persisted) {
+                console.log(sessionStorage.getItem("isLoggedIn"))
+                if (sessionStorage.getItem("isLoggedIn") === "true") {
+                    // Redirect to the dashboard or home page
+                    location.href = "{% url 'home' %}"; // Adjust the path accordingly
+                }
+            } else {
+                // The page was loaded normally
+                console.log("Page loaded normally");
+                
+                // Your logic here
+                console.log(sessionStorage.getItem('isLoggedIn'));
+                console.log(sessionStorage.getItem('loggedOut'));
+                console.log(username);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <form method="POST" action="{% url 'login' %}" class="needs-validation">
+                {% csrf_token %}
+                <p class="title">Sign In</p>
+                {% if error %}
+                    <div class="error-message" style="color: red;">{{ error }}</div>
+                {% endif %}
+                 {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="label">USERNAME</div>
+                <input class="input-field" type="text" id="username" name="username" placeholder="Username" required>
+                <div class="label">PASSWORD</div>
+                <input class="input-field" type="password" id="password" name="password" placeholder="Password" required>
+                <button type="submit" class="sign-in-btn">Sign in</button>
+            </form>
+            <a href="{% url 'fpemailpage' %}" class="forgot-password">Forgot Password?</a>
+        </div>
+        <div class="right-panel">
+            <p class="welcome-title">Welcome to GenSQL</p>
+            <p class="sign-up-text">Don't have an account?</p>
+            <a href="{% url 'register' %}" class="sign-up-btn">Sign Up</a>
+        </div>
+    </div>
+</body>
+</html> 

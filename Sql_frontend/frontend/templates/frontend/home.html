@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Generator</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+
+                console.log(sessionStorage.getItem("loggedOut"))
+                if (sessionStorage.getItem("loggedOut") === "True") {
+                    // Redirect to the dashboard or home page
+                    location.href = "{% url 'login' %}"; // Adjust the path accordingly
+                }
+            } else {
+                // The page was loaded normally
+                console.log("Page loaded normally");
+                sessionStorage.setItem("isLoggedIn", "true");
+                
+                const username = "{{ request.session.username }}" ;
+                sessionStorage.setItem("username", username);
+                // Your logic here
+            }
+        });
+        {% comment %} window.onload = function() {
+            const loggedOut = sessionStorage.getItem("loggedOut") === "True";
+            console.log("here");
+            console.log("loggedOut" + loggedOut);
+            if (loggedOut) {
+                console.log("here also");   
+                sessionStorage.removeItem("loggedOut"); // Optional: Clear loggedOut flag after use
+                location.href = "{% url 'login' %}";
+            } 
+            sessionStorage.setItem("isLoggedIn", "true");
+        }; {% endcomment %}
+    </script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-left">
+            <img src="{%static 'images/database.png' %}" alt="Logo" class="logo"> <!-- Replace with actual logo -->
+            <h2>GenSQL</h2>
+        </div>
+        <ul class="nav-right">
+            <li><p class="username-display">Welcome, {{ request.session.username }}</p></li>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="{%url 'chat_history'%}" >Chat History</a></li>
+            <li><a href="{% url 'logout'%}" onclick = 'changeSessionStatus()'>Logout</a></li>
+        </ul>
+    </div>
+
+    <h1 class="centered-heading">Generating SQL using Text Prompt</h1>
+
+
+    <div class="input-container">
+        <div class="upload-buttons">
+            <select id="database-select" name="database" class="select-database" required >
+                <option value=''selected disabled>Select SQL Server</option> <!-- Default option inside the select box -->
+                <option value="SQL">MSSQL</option>
+                <option value="MySQL">MySQL</option>
+                <option value="PostgreSQL">PostgreSQL</option>
+            </select>
+    
+            <!-- CSV Upload Form -->
+            <form id="csvForm" method="post" enctype="multipart/form-data" action = "{%url 'upload_csv' %}" onsubmit="return false;">
+                {% csrf_token %}
+                <label for="csv-file" id="csv-label" class="upload-btn" >Upload CSV File</label>
+                <input type="file" id="csv-file" name="csvfile" accept=".csv" style="display: none;" onchange="validateCSVFile(this)">
+                <button type="submit" class="submit-btn" id="csv-button">Submit CSV</button>
+            </form>
+            
+            <!-- Excel Upload Form -->
+            <form id="excelForm" method="post" enctype="multipart/form-data" action="{% url 'upload_excel' %}" onsubmit="return false;">
+                {% csrf_token %}
+                <label id="excel-label" for="excel-file" class="upload-btn">Upload Excel File</label>
+                <input type="file" id="excel-file" name="excelfile" accept=".xlsx,.xls" style="display: none;" onchange="validateExcelFile(this)">
+                <button type="submit" class="submit-btn" id="excel-button">Submit Excel</button>
+            </form>
+        </div>
+        <p id="error-message" style="color: red">{{error}}</p>
+        <p id="success-message" style="color: black">{{message}}</p>
+            
+    </div>
+
+    <form id="generateForm" method="post" enctype="multipart/form-data" action="{%url 'generate' %}" onsubmit="return false;" >
+        {% csrf_token %}
+        <textarea id="prompt" name="prompt" placeholder="Enter your query or prompt here..." rows="6" cols="50" class="text-input"></textarea>
+        <button type="submit" id='generate-btn' class="generate-btn">Generate Query</button>
+    </form>    
+
+    <h3>Generated SQL Query:</h3>
+
+    <div style="position: relative;">
+        <textarea id="generated-query" placeholder = "Select * FROM ..." class="generated-query" rows="6" cols="50" readonly></textarea>
+        <span class="copy-icon" onclick="copyToClipboard('generated-query')" style="position: absolute; right: 10px; top: 5px;">📋</span> <!-- Copy icon -->
+    </div>
+
+    <script src="{%static 'js/home.js' %}">
+    
+    </script>
+</body>
+</html>
+
+
+
+
+
